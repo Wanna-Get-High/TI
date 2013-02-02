@@ -120,6 +120,4 @@ plot3d (axe, axe, centre);
 varRelMaxLam = (max(centre) - min(centre)) / max(centre) * 100;
 
 
-moy = ones(100,100);
-
 

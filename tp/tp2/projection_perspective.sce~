@@ -1,0 +1,39 @@
+//un cube de côté 1 m dont le barycentre est l'origine du repère monde, 
+// et dont les côtés sont parallèles aux axes de ce repère.
+
+axe = [0:10]
+
+// points
+n = 10
+// segment
+m = 10
+
+p1 = [-0.5, -0.5, -0.5, 1];
+p2 = [0.5, -0.5, -0.5, 1];
+p3 = [0.5, 0.5, -0.5, 1];
+p4 = [-0.5, 0.5, -0.5, 1];
+p5 = [-0.5, -0.5, 0.5, 1];
+p6 = [0.5, -0.5, 0.5, 1];
+p7 = [0.5, 0.5, 0.5, 1];
+p8 = [0.5, -0.5, 0.5, 1];
+
+cube = [p1',p2',p3',p4',p5',p6',p7',p8'];
+
+x = -2.5;
+y = -1.5;
+
+for i = 0 : 22
+    if modulo(i,6) == 0 & i ~= 0 then
+        x = -2.5;
+        y = y + 1;
+    end
+        grille(1,i+1) = x;
+        grille(2,i+1) = y;
+        grille(3,i+1) = 0;
+        grille(4,i+1) = 1;
+        
+        x = x + 1;
+end
+
+x = [1:6] - 3.5;
+y = [1:

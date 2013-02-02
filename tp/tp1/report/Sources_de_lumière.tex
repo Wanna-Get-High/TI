@@ -1,0 +1,248 @@
+ \documentclass[a4paper,10pt]{article}
+\input{/Users/WannaGetHigh/workspace/latex/macros.tex}
+
+\title{TI - TP: Sources lumineuses}
+\author{François \bsc{Lepan}}
+
+\begin{document}
+\maketitle
+
+
+\section{Affichage 3D d'une image}
+On récupère l'image dans une matrice 3D \\
+\verb?img = imread("ti-semaine-1-texte.png");? \\ \\
+
+On récupère sa hauteur et largeur \\
+\verb?height = size(img, 1);? \\
+\verb?width = size(img, 2);? \\ \\
+
+On affiche l'image (cf Fig.~\ref{fig:image_text} ) \\
+\verb?imshow(img);? \\
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{image_text.png}
+	\end{center}
+	\caption{Image de base}
+	\label{fig:image_text}
+\end{figure}
+
+On récupère les niveaux de gris de l'image sous forme de matrice \\
+\verb?imgG = im2double(img);? \\ \\
+
+On récupère la ligne 44. ":" signifie que l'on prend le reste des colonnes afin de constituer la ligne (cf Fig.~\ref{fig:line44} ) \\
+\verb?line44 = imgG(44,:); ? \\
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{line44.png}
+	\end{center}
+	\caption{Ligne 44 de l'image de base}
+	\label{fig:line44}
+\end{figure}
+
+On Récupère une image de 100x100 de l'image initial (cf Fig.~\ref{fig:image_text} ) \\
+\verb?img100100 = imgG(1:100,1:100);? \\ \\
+
+On créer une image 3D de l'image 100x100 (cf Fig.~\ref{fig:plot3D_100_100} ) \\
+plot3d(1:100,1:100,img100100); \\
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=15cm]{plot3D_100_100.png}
+	\end{center}
+	\caption{affichage 3D de l'image 100x100}
+	\label{fig:plot3D_100_100}
+\end{figure}
+
+On voit bien avec le relief que 1 correspond au blanc et 0 au noir.
+
+\section{Éclairement d'une source ponctuelle isotrope}
+\subsection{Commentaire du code}
+
+\begin{paragraph}{Définition des échantillons sur un axe} \ \\
+Créer un axe avec un pas de  i = 100 / i + 5e-3  \\
+\verb?axe = [0:99] / 100 + 5e-3;? \\
+\end{paragraph}
+
+\begin{paragraph}{Définition des éléments de surface} \ \\
+Créer une matrice avec la matrice de 1 transposer $*$ la matrice axe. \\
+\verb?x = ones (1:100)' * axe; ? \\
+Créer une matrice avec la matrice de axe transposer $*$ la matrice 1. \\
+\verb?y = axe' * ones (1:100); ? \\
+\\
+Position de la source de lumière\\
+\verb?xs = 0.5;? \\
+\verb?ys = 0.5;? \\
+\end{paragraph}
+ 
+\begin{paragraph}{Calcule de la distance} \ \\
+$d = sqrt ((x - xs).^2 + (y - ys).^2);$ \\
+$(x - xs).^2 \rightarrow$  Pour chaque valeur de la matrice x on lui soustrait xs (car un scalaire) et on l'élève au carré. \\
+\\
+Si on voulais faire un produit matriciel on ferai juste $^2$. \\
+On calcule la distance entre les valeurs de la matrice x et celle de y. \\
+\verb?d = sqrt ((x - xs).^2 + (y - ys).^2);? \\
+\\
+Tracé de la fonction distance. (cf Fig.~\ref{fig:matrice_distance} ) \\
+\verb?plot3d (axe, axe, d);?
+
+\end{paragraph}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{matrice_distance.png}
+	\end{center}
+	\caption{tracer 3D de la fonction distance}
+	\label{fig:matrice_distance}
+\end{figure}
+
+
+\subsection{Calcule des valeurs d'éclairement reçues par les éléments de la surface plane éclairée par la source ponctuelle isotrope}
+
+\begin{Verbatim}
+h = 0.5; // 50 cm
+fluxEnerg = 100;
+I = fluxEnerg / (2* %pi);
+e0 = I / h^2;
+eclairementISO = e0 * h^3 * ( h^2 + d.^2).^(-3/2);
+plot3d (axe, axe, eclairementISO);
+\end{Verbatim}
+
+L'exécution du code précédent fournit la Fig.~\ref{fig:source_ponctuelle_isotrope} qui est une représentation 3D du calcule des valeurs d'éclairement reçues par les éléments de la surface plane éclairée par la source ponctuelle isotrope.
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{source_ponctuelle_isotrope.png}
+	\end{center}
+	\caption{Représentation 3D de la source ponctuelle isotrope}
+	\label{fig:source_ponctuelle_isotrope}
+\end{figure}
+
+
+\section{Éclairement d'une source ponctuelle lambertienne}
+
+\subsection{Calcule des valeurs d'éclairement reçues par les éléments de la surface plane éclairée par la source ponctuelle lambertienne}
+\begin{Verbatim}
+eclairementLAM = e0 * h^4 * ( h^2 + d.^2).^(-2);
+plot3d (axe, axe, eclairementLAM);
+\end{Verbatim}
+
+L'exécution du code précédent fournit la Fig.~\ref{fig:eclairement_source_lambertien} qui est une représentation 3D du des valeurs d'éclairement reçues par les éléments de la surface plane éclairée par la source ponctuelle lambertienne.
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{eclairement_source_lambertien.png}
+	\end{center}
+	\caption{Représentation 3D de la source ponctuelle lambertien}
+	\label{fig:eclairement_source_lambertien}
+\end{figure}
+
+\subsection{Calcule de la variation relative maximale obtenue sur la surface}
+
+\subsubsection{Éclairée par la source ponctuelle isotrope}
+\verb?varRelMax = (max(eclairementISO) - min(eclairementISO)) / max(eclairementISO) * 100?\\
+\\
+Et on obtient 80.359674 \%
+
+\subsubsection{Éclairée par la source ponctuelle lambertienne}
+\verb?varRelMax = (max(eclairementLAM) - min(eclairementLAM)) / max(eclairementLAM) * 100?\\
+\\
+Et on obtient 88.583537 \%
+
+\section{Éclairement d'une grille de sources ponctuelles}
+
+\subsection{calcule de l'éclairement reçu par le carré dans ces conditions}
+
+\newpage
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeBlue{// Calcule de la grille de 100x100 afin d'observer les résultat}
+axe = [0:99] / 100 + 5e-3;
+x = ones (1:100)' * axe;
+y = axe' * ones (1:100); 
+
+\codeBlue{// Calcule de la grille de 200x200 afin d'effectuer les calcule pour un carre de 2 mètres }
+axe200 = [0:199] / 100 + 5e-3;
+x200 = ones (1:200)' * axe200;
+y200 = axe200' * ones (1:200); 
+
+\codeBlue{// Calcule de l'éclairage à la verticale d'une source de lumière }
+h = 0.5;
+fluxEnerg = 100;
+I = fluxEnerg / (2* %pi);
+e0 = I / h^2;
+
+\codeBlue{// nombre de lumière par ligne}
+num = 2;
+
+\codeBlue{// La distance entre chacune des lumières} 
+dist = 2 / (num+1); 
+
+\codeBlue{// Calcule d'une matrice de num*num contenant des nombres complexes }
+\codeBlue{// partie réel = x, partie imaginaire = y}
+grilleLum = [1:num] * dist;
+
+a = grilleLum';
+b = (grilleLum * %i);
+
+a = repmat(a,1,num);
+b = repmat(b,num,1);
+
+grille = a + b;
+
+eclairement = [];
+
+\codeBlue{// addition des valeurs d'éclairement pour chaque lumière}
+for i = 1 : num
+    for j = 1 : num
+        
+            xs = real(grille(i,j));
+            ys = imag(grille(i,j));
+    
+            d = sqrt ((x200 - xs).^2 + (y200 - ys).^2);
+    
+            eclairementLAM = e0 * h^4 * ( h^2 + d.^2).^(-2);
+            
+            eclairement = eclairement + eclairementLAM;
+    end
+end
+
+\codeBlue{// On récupère un carré de 1 mètre au centre de celui de 2 mètres}
+centre = eclairement(51:150,51:150);
+
+\codeBlue{// On l'affiche}
+plot3d (axe, axe, centre);
+
+\codeBlue{// On calcule la variation relative a l'éclairement reçu par la surface}
+varRelMaxLam = (max(centre) - min(centre)) / max(centre) * 100;
+
+\end{Verbatim}
+
+L'exécution du code précédent fournit la Fig.~\ref{fig:eclairement_lambertien_2x2} qui est une représentation 3D du des valeurs d'éclairement reçues par les éléments de la surface plane éclairée par 4 sources lambertienne à distance égales.
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{eclairement_lambertien_2x2.png}
+	\end{center}
+	\caption{Représentation 3D de la source ponctuelle isotrope}
+	\label{fig:eclairement_lambertien_2x2}
+\end{figure}
+
+\subsection{calculer la variation relative de l'éclairement reçu par la surface}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeBlue{// On calcule la variation relative a l'éclairement reçu par la surface}
+varRelMaxLam = (max(centre) - min(centre)) / max(centre) * 100;
+\end{Verbatim}
+
+Et on obtient une valeur de 36.854445 \%
+
+\subsection{Combien de sources faut-il utiliser pour avoir une variation inférieure à 1 pour-cent?}
+
+Afin d'avoir une variation relative inférieur a 1 pour-cent il faut mettre 12 lumières x 12 lumières mais il faut aussi augmenté la surface de la grille a au moins 4 mètres. Ceci est due au fait que si on augmente l'espacement des lumières la surface recevra plus de d'éclairement et donc la variation n'en sera que plus réduit.
+
+\subsection{Calcule de la fluctuation de l'éclairement de la surface par rapport à sa valeur moyenne}
+
+
+\end{document}

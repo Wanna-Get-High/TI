@@ -1,21 +1,19 @@
 //Open the image
-img = imread("ti-semaine-1-texte.png");
+img = imread("Z:\Mes documents\workspace\TI\tp1\ti-semaine-1-texte.png");
 
 // Get width and height
 height = size(img, 1);
 width = size(img, 2);
 
-// affiche limage
-//imshow(img);
+// Show the image in 2D
+imshow(img);
 
-//on recupere lmage en niveau de gris
+// get the greyscale of the image
 imgG = im2double(img);
 
 // get the line 44
 // : means the rest of the colums to reproduce the line
-line44 = imgG(44,:);
-
-//imshow(line44);
+line44 = imgG(44,:); 
 
 //noir = 0 blanc = 1
 
@@ -26,10 +24,9 @@ img100100 = imgG(1:100,1:100);
 plot3d(1:100,1:100,img100100);
 
 // get current axes of the current loaded axes
-//a = gca(); 
+a = gca(); 
 
  // x, y, z begin -> end
-//a.data_bounds = [0,0,0;100,100,1];
+a.data_bounds = [0,0,0;100,100,1];
 
-// ???
 //a.color_map[];
