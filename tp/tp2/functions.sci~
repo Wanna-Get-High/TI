@@ -7,20 +7,16 @@ function m = cube()
     p5 = [-0.5, -0.5, 0.5, 1];
     p6 = [0.5, -0.5, 0.5, 1];
     p7 = [0.5, 0.5, 0.5, 1];
-    p8 = [-0.5, 0.5, 0.5, 1];
+    p8 = [0.5, -0.5, 0.5, 1];
     
     m = [p1',p2',p3',p4',p5',p6',p7',p8']; 
 endfunction
 
 function seg = segmentCube()
-    
     liste  = [1:4];
-    liste1 = liste+4;
+    liste1 = 
     
-    liste2 = moveNElemToTheEnd(liste,liste(1,1))
-    liste3 = moveNElemToTheEnd(liste1,liste1(1,1))
-    
-    seg = [liste, liste1, liste; liste2, liste3,liste1] 
+    seg = [liste, liste+4, liste;liste(m(1:4)), modulo(liste+4,5),liste+4] 
 endfunction
 
 
@@ -49,25 +45,25 @@ endfunction
 // la rotation d'un angle theta autour de l'axe X
 function m = RotationX(theta)
     m = [1,     0,        0,       0;
-         0,cosd(theta),-sind(theta), 0;
-         0,sind(theta),cosd(theta),  0;
+         0,cos(theta),-sin(theta), 0;
+         0,sin(theta),cos(theta),  0;
          0,     0,        0,       1]
 endfunction
 
 // Calcule la matrice homogène définissant 
 // la rotation d'un angle theta autour de l'axe Y
 function m = RotationY(theta)
-    m = [cosd(theta),0,sind(theta), 0;
+    m = [cos(theta),0,sin(theta), 0;
          0,         0,      0,    0;   
-         -sind(theta),0,cosd(theta),0;
+         -sin(theta),0,cos(theta),0;
          0,         0,      0,    1]
 endfunction
 
 // Calcule la matrice homogène définissant 
 // la rotation d'un angle theta autour de l'axe Z
 function m = RotationZ(theta)
-    m = [cosd(theta),-sind(theta),0 ,0;
-         sind(theta),cosd(theta) ,0 ,0;   
+    m = [cos(theta),-sin(theta),0 ,0;
+         sin(theta),cos(theta) ,0 ,0;   
          0         ,0          ,1 ,0;
          0         ,0          ,0 ,1]
 endfunction
@@ -93,6 +89,9 @@ function m = projection(f, matExtr)
     m = proj * matExtr
 endfunction
 
+function d = deg(rad)
+    d = rad*(%pi/180)
+endfunction
 
 // Sc = colonne
 // Sl = ligne

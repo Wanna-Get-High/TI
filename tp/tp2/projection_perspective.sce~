@@ -1,39 +1,73 @@
 //un cube de côté 1 m dont le barycentre est l'origine du repère monde, 
 // et dont les côtés sont parallèles aux axes de ce repère.
 
-axe = [0:10]
+// TODO create a cude with numLign and numCol
 
-// points
-n = 10
-// segment
-m = 10
+exec ("functions.sci", -1);
 
-p1 = [-0.5, -0.5, -0.5, 1];
-p2 = [0.5, -0.5, -0.5, 1];
-p3 = [0.5, 0.5, -0.5, 1];
-p4 = [-0.5, 0.5, -0.5, 1];
-p5 = [-0.5, -0.5, 0.5, 1];
-p6 = [0.5, -0.5, 0.5, 1];
-p7 = [0.5, 0.5, 0.5, 1];
-p8 = [0.5, -0.5, 0.5, 1];
+// le cube
+c = cube();
+// segment du cube
+sc = segmentCube();
 
-cube = [p1',p2',p3',p4',p5',p6',p7',p8'];
+// la grille
+g = grille();
+// segments de la grille
+sg = segmentGrille();
 
-x = -2.5;
-y = -1.5;
+// centre optique (0, 0, -5 m), axe optique orienté selon z, 
+// verticale de la caméra selon y.  ''
+// matrice extrinsec = repere monde -> repere camera
 
-for i = 0 : 22
-    if modulo(i,6) == 0 & i ~= 0 then
-        x = -2.5;
-        y = y + 1;
-    end
-        grille(1,i+1) = x;
-        grille(2,i+1) = y;
-        grille(3,i+1) = 0;
-        grille(4,i+1) = 1;
-        
-        x = x + 1;
-end
+translation = translation(0,0,-5);
+rotation = RotationX(deg(90));
+matExtr = translation*rotation;
 
-x = [1:6] - 3.5;
-y = [1:
+// Avant de faire la rotation on la camera regarde dans la direction de laxe Z
+// Donc les axes X et Y sont horizontaux par rapport a la camera.
+// Afin davoir laxe Y a la verticale il suffit de faire une rotation de laxeX de
+// 90 deg.
+
+// Axe optique selon la diagonale principale du repère, regardant 
+// le centre du repère. Centre optique situé à une distance de 5 mètres 
+// du centre du repère. Verticale de la caméra dans un plan contenant z.
+
+rotation1 = RotationY(deg(135)) * RotationZ(deg(-45)) * RotationX(deg(45));
+//translation1 = translation(0,0,-5);
+
+matExtr1 = rotation1*translation;
+
+// appliquer au cube
+s2=matExtr1*g;
+
+// affichage du cube
+tiAfficheObjet2D(1,[2,2],s2,sg);
+
+// calculer la matrice intrinsèque d'une caméra dont 
+
+///// MATRICE EXTRINSEC ///// 
+// le centre de l'image est situé en haut à gauche du capteur, 
+// l'axe des x étant orienté vers la droite et l'axe des y vers le bas.
+matExtrin = RotationX(deg(-90))*RotationY(90);
+
+///// MATRICE INTRINSEC ///// 
+// le capteur rectangulaire comporte 600 lignes de 800 pixels ; 
+// ses pixels sont carrés ; 
+// le capteur d'image est un rectangle de côtés 6.6 et 8.8 millimètres ; 
+// l'objectif a une distance focale de 20 millimètres (0.02 m) ;
+
+projec = projection(0.02, matExtrin);
+matIntrinsec = chgtRepere(800,600,0.0066,0.0088,projec);
+
+
+// Affichages
+
+
+
+
+
+
+
+
+
+

@@ -1,21 +1,140 @@
  \documentclass[a4paper,10pt]{article}
 \input{/Users/WannaGetHigh/workspace/latex/macros.tex}
 
-\title{projection perspective}
+\title{Projection perspective}
 \author{François \bsc{Lepan}}
 
 \begin{document}
 \maketitle
 
 \section{Modèles simples d'objets 3D}
-\subsection{un cube de côté 1 m dont le barycentre est l'origine du repère monde, et dont les côtés sont parallèles aux axes de ce repère}
 
-\subsection{une grille plane composée de 15 carrés (5 selon x et 3 selon y) de côtés 1 m, dont le barycentre est l'origine du repère monde, et située dans le plan z=0.}
+\subsection{Un cube de côté 1 m dont le barycentre est l'origine du repère monde, et dont les côtés sont parallèles aux axes de ce repère}
+
+Voici la fonction correspondant à la création de ce cube:
+\begin{verbatimtab}
+function m = cube()
+	p1 = [-0.5, -0.5, -0.5, 1];
+	p2 = [0.5, -0.5, -0.5, 1];
+	p3 = [0.5, 0.5, -0.5, 1];
+	p4 = [-0.5, 0.5, -0.5, 1];
+	p5 = [-0.5, -0.5, 0.5, 1];
+	p6 = [0.5, -0.5, 0.5, 1];
+	p7 = [0.5, 0.5, 0.5, 1];
+	p8 = [0.5, -0.5, 0.5, 1];
+    
+	m = [p1',p2',p3',p4',p5',p6',p7',p8']; 
+endfunction
+\end{verbatimtab}
+
+\subsection{Une grille plane composée de 15 carrés (5 selon x et 3 selon y) de côtés 1 m, dont le barycentre est l'origine du repère monde, et située dans le plan z=0.}
+
+Voici la fonction correspondant à la création de cette grille:
+\begin{verbatim}
+function m = grille()
+    x = [1:6] - 3.5;
+    y = [-1.5,-1.5,-1.5,-1.5,-1.5,-1.5];
+    z = zeros(1,24);
+    w = ones(1,24);
+
+    m = [x, x, x, x; y, y+1,y+2, y+3; z; w]
+endfunction
+\end{verbatim}
 
 \section{Matrice extrinsèque}
 
+\subsection{Définition des quatre fonctions}
+
+Voici les quatre fonctions qui permettent de calculer des matrices extrinsèques:
+
+\begin{paragraph}{\emph{RotationX(theta)}}~\\
+\begin{verbatim}
+function m = RotationX(theta)
+    m = [1,     0,        0,       0;
+         0,cos(theta),-sin(theta), 0;
+         0,sin(theta),cos(theta),  0;
+         0,     0,        0,       1]
+endfunction
+\end{verbatim}
+\end{paragraph}
+
+\begin{paragraph}{\emph{RotationY(theta)}}~\\
+\begin{verbatim}
+function m = RotationY(theta)
+    m = [cos(theta),0,sin(theta), 0;
+         0,         0,      0,    0;   
+         -sin(theta),0,cos(theta),0;
+         0,         0,      0,    1]
+endfunction
+\end{verbatim}
+\end{paragraph}
+
+\begin{paragraph}{\emph{RotationZ(theta)}}~\\
+\begin{verbatim}
+function m = RotationZ(theta)
+    m = [cos(theta),-sin(theta),0 ,0;
+         sin(theta),cos(theta) ,0 ,0;   
+         0         ,0          ,1 ,0;
+         0         ,0          ,0 ,1]
+endfunction
+\end{verbatim}
+\end{paragraph}
+
+\begin{paragraph}{\emph{Translation(x,y,z)}}~\\
+\begin{verbatim}
+function m = translation(x,y,z)
+    m = [1,0,0,x;
+         0,1,0,y;
+         0,0,1,z;
+         0,0,0,1]
+endfunction
+\end{verbatim}
+\end{paragraph}
+
+\subsection{Déterminer les matrices extrinsèques positionnant les caméras suivantes:}
+
+\subsubsection{Centre optique (0, 0, -5 m), axe optique orienté selon z, verticale de la caméra selon y}
+
+Voici le code correspondant à la création de cette matrice:
+\begin{verbatim}
+?????????
+\end{verbatim}
+
+
+\subsubsection{Axe optique selon la diagonale principale du repère, regardant le centre du repère. Centre optique situé à une distance de 5 mètres du centre du repère. Verticale de la caméra dans un plan contenant z}
+
+Voici le code correspondant à la création de cette matrice:
+\begin{verbatim}
+????????????
+\end{verbatim}
+
+
 \section{Matrice intrinsèque}
 
+Voici le calcule de la matrice intrinsèque décrit dans le sujet:
+
+\begin{verbatimtab}
+??
+\end{verbatimtab}
+
++ en quoi le changement de la distance focale a elle une influence sur la scène regarder.
+
 \section{Projection et affichage des objets}
+
+Représentation des images obtenues par la caméra définie précédemment:
+
+\subsection{Pour la grille et le cube}
+
+??????????????????????\\
+??????????????????????\\
+??????????????????????\\
+
+\subsection{pour les deux positions définies par les matrices extrinsèques calculées}
+
+
+??????????????????????\\
+??????????????????????\\
+??????????????????????\\
+
 
 \end{document}
