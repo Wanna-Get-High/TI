@@ -9,30 +9,32 @@
 
 \section{Composantes d'une image couleur}
 
-\subsection{Quelle sont les dimensions de la variable utilisée pour stocker l'image et que représentent-t-elles?}
+\subsection{Quelles sont les dimensions de la variable utilisée pour stocker l'image et que représentent-t-elles?}
 
-Les dimensions de l'image sont égales a sa taille en pixels x le nombre de couleur (ici 800x600x3). \\ 
+Les dimensions de l'image sont égales à sa taille en pixels fois le nombre de couleurs \\
+(ici 800x600x3). \\ 
 
-Pour un élément se situant a (23,23,z) de la matrice:\\
-	la valeur z = 1 correspond a la quantité de rouge du pixel (23, 23) \\
-	la valeur z = 2 correspond a la quantité de vert du pixel (23, 23) \\
-	la valeur z = 3 correspond a la quantité de bleu du pixel (23, 23) \\
+Pour un élément se situant à (23,23,z) de la matrice:\\
+	la valeur z = 1 correspond à la quantité de rouge du pixel (23, 23) \\
+	la valeur z = 2 correspond à la quantité de vert du pixel (23, 23) \\
+	la valeur z = 3 correspond à la quantité de bleu du pixel (23, 23) \\
 
 \subsection{Séparer les composantes rouge, verte et bleue}
 
-\begin{paragraph}{En niveau de gris}
-\begin{verbatimtab}
+\begin{paragraph}{En niveau de gris} Voici le code correspondant à la séparation des trois composantes:
+\begin{Verbatim}[commandchars=\\\{\}]
 img = imread("ti-semaine-3-mire.png");
 
-// recupere les niveaux de gris pour la couleur rouge 
+\codeBlue{// recupere les niveaux de gris pour la couleur rouge}
 imgRG = img(:,:,1);
-// recupere les niveaux de gris pour la couleur bleu 
+\codeBlue{// recupere les niveaux de gris pour la couleur bleu}
 imgGG = img(:,:,2);
-// recupere les niveaux de gris pour la couleur vert 
+\codeBlue{// recupere les niveaux de gris pour la couleur vert}
 imgBG = img(:,:,3);
-// affichage
+
+\codeBlue{// affichage}
 imshow([imgRG, imgGG, imgBG]);
-\end{verbatimtab}
+\end{Verbatim}
 \end{paragraph}
 
 L'exécution du code précédent fournit la Fig.~\ref{fig:niveau_de_gris_composante_RGB} sur laquelle on peut observer de gauche à droite les niveaux de gris pour la couleur rouge puis vert puis bleu.
@@ -48,37 +50,37 @@ L'exécution du code précédent fournit la Fig.~\ref{fig:niveau_de_gris_composante
 \newpage
 
 \begin{paragraph}{En couleur}
-Voici le code correspondant a la séparation des trois composantes:
-\begin{verbatim}
-function imgR = redColorsOf(img)
+Voici le code correspondant à la séparation des trois composantes:
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeRed{function} imgR = redColorsOf(img)
     imgR = img;
     imgR(:,:,2) = img(:,:,1)*0;
     imgR(:,:,3) = img(:,:,1)*0;
-endfunction
+\codeRed{endfunction}
 
-function imgG = greenColorsOf(img)
+\codeRed{function} imgG = greenColorsOf(img)
     imgG = img;
     imgG(:,:,1) = img(:,:,1)*0;
     imgG(:,:,3) = img(:,:,1)*0;
-endfunction
+\codeRed{endfunction}
 
-function imgB = blueColorsOf(img)
+\codeRed{function} imgB = blueColorsOf(img)
     imgB = img;
     imgB(:,:,1) = img(:,:,1)*0;
     imgB(:,:,2) = img(:,:,1)*0;
-endfunction
+\codeRed{endfunction}
 
 img = imread("ti-semaine-3-mire.png");
 
-// met les valeur pour le vert et le bleu a 0
+\codeBlue{// met les valeurs pour le vert et le bleu a 0}
 imgR = redColorsOf(img);
-// met les valeur pour le rouge et le bleu a 0
+\codeBlue{// met les valeurs pour le rouge et le bleu a 0}
 imgG = greenColorsOf(img);
-// met les valeur pour le vert et le rouge a 0
+\codeBlue{// met les valeurs pour le vert et le rouge a 0}
 imgB = blueColorsOf(img);
-// affichage
+\codeBlue{// affichage}
 imshow([imgR, imgG, imgB]);
-\end{verbatim}
+\end{Verbatim}
 
 L'exécution du code précédent fournit la Fig.~\ref{fig:couleur_composante_RGB} sur laquelle on peut observer de gauche à droite les composantes couleur rouge puis vert puis bleu.
 
@@ -92,13 +94,14 @@ L'exécution du code précédent fournit la Fig.~\ref{fig:couleur_composante_RGB} s
 
 \end{paragraph}
 
+\newpage
 
-\begin{paragraph}{Vérification de la récupération de l'image pour les trois composante}
+\begin{paragraph}{Vérification de la récupération de l'image pour les trois composantes}
 \begin{verbatim}
 imgRes = img;
-imgRes = img(:,:,1)*0;
-imgRes = img(:,:,2)*0;
-imgRes = img(:,:,3)*0;
+imgRes(:,:,1) = img(:,:,1)*0;
+imgRes(:,:,2) = img(:,:,2)*0;
+imgRes(:,:,3) = img(:,:,3)*0;
 imgRes(:,:,1) = imgR(:,:,1);
 imgRes(:,:,2) = imgG(:,:,2);
 imgRes(:,:,3) = imgB(:,:,3);
@@ -109,21 +112,389 @@ L'exécution du code précédent fournit la Fig.~\ref{fig:ti-semaine-3-mire}  qui e
 
 \begin{figure}[ht]
 	\begin{center}
-		\includegraphics[width=8cm]{ti-semaine-3-mire.png}
+		\includegraphics[width=10cm]{ti-semaine-3-mire.png}
 	\end{center}
 	\caption{Image de base}
 	\label{fig:ti-semaine-3-mire}
 \end{figure}
-
-
 \end{paragraph}
 
 \section{Sur et sous-échantillonnage}
 
+\subsection{En considérant que l'image de mire utilisée précédemment a été acquise avec une résolution de 72 pixels/pouce selon les deux directions, déterminer les dimensions du support initial de l'image.}
+
+Sachant que l'image fait 600x800 pixels il suffit de faire: \\
+600 / 72 = 8.33 pouce \\
+800 / 72 = 11.11 pouce \\
+Et donc le support initial à pour dimension 8.33 x 11.11pouces \\
+
+
+\subsection{Sous-échantillonnage de l'image, fonction \emph{sousEch(img,n)}}
+
+\begin{paragraph}{Voici la fonction correspondante:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeRed{function} im = sousEch(img,n)
+    img = img(:,:,1);
+    img = im2double(img);
+    
+    c = size(img,1)/n
+    l = size(img,2)/n
+    
+    new_img = zeros(c,l)
+    
+    for i = 1 : c
+        for j = 1 : l
+            
+          for k = 1 : n
+              for m = 1 : n
+                  new_img(i,j) = new_img(i,j) + img((i*n)+(k-n),(j*n)+(m-n));
+              end
+          end
+          
+          new_img(i,j) = new_img(i,j) / (n*n);
+          
+        end
+    end
+    
+    im =  new_img
+\codeRed{endfunction}
+
+img = imread("ti-semaine-3-mire.png");
+sousEchImg = sousEch(img,2);
+imshow(sousEchImg);
+\end{Verbatim}
+
+L'exécution du code précédant nous fournit la Fig.~\ref{fig:ss_echan_2_comp_rouge}. Cette figure représente un sous échantillonnage de facteur 2 de la Fig.~\ref{fig:ti-semaine-3-mire} pour sa composante rouge. 
+
+Le sous-échantillonnage de facteur 2 dans la hauteur et dans la largeur correspond à prendre quatre pixels de l'image de base et de les transformer en un seul pixel sur la nouvelle image avec pour valeur la moyenne des quatre pixels (\emph{cf. Fig.}\ref{fig:sous_echant}).
+\end{paragraph}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=9cm]{ss_echan_2_comp_rouge.png}
+	\end{center}
+	\caption{Sous-échantillonnage de facteur 2 de la Fig.~\ref{fig:ti-semaine-3-mire} pour sa composante rouge}
+	\label{fig:ss_echan_2_comp_rouge}
+\end{figure}
+
+\begin{figure}[hb]
+	\begin{center}
+		\includegraphics[width=10cm]{graphics/sous_echant.pdf}
+	\end{center}
+	\caption{Schéma du sous-échantillonnage}
+	\label{fig:sous_echant}
+\end{figure}
+
+\newpage
+~
+\newpage
+
+\subsection{Sur-échantillonnage de l'image, fonction \emph{surEch(img,n)}}
+
+\begin{paragraph}{Voici la fonction correspondante:}
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeRed{function} im = surEch(img,n)
+
+    img = img(:,:,1);
+    img = im2double(img);
+
+    c = size(img,1)
+    l = size(img,2)
+    
+    new_img = zeros(c*n,l*n)
+    
+    for i = 1 : c
+        for j = 1 : l
+            
+          for k = 1 : n
+              for m = 1 : n
+                  
+               new_img((i*n)+(k-n),(j*n)+(m-n)) = img(i,j)
+               
+              end
+          end
+          
+        end
+    end
+    
+    im =  new_img
+\codeRed{endfunction}
+
+img = imread("ti-semaine-3-mire.png");
+surEchImg = surEch(img,2);
+imshow(surEchImg);
+\end{Verbatim}
+
+L'exécution du code précédant nous fournit la Fig.~\ref{fig:sur_echan_2_comp_rouge}. Cette figure représente un sur-échantillonnage de facteur 2 de la Fig.~\ref{fig:ti-semaine-3-mire} pour sa composante rouge.
+
+Cette image est coupée car trop grande (1600 * 1200 pixels) pour mon écran (1800 * 1000). Mais cet agrandissement est normal vu que pour un pixel on le duplique quatre fois.
+
+Le sur-échantillonnage de facteur 2 dans la hauteur et dans la largeur correspond à prendre un pixel de l'image de base et de le transformer en quatre pixels sur la nouvelle image qui auront la même valeur que le pixel de l'image de base (\emph{cf. Fig.}\ref{fig:sur_echant}).
+\end{paragraph}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{sur_echan_2_comp_rouge.png}
+	\end{center}
+	\caption{Sur-échantillonnage de facteur 2 de la Fig.~\ref{fig:ti-semaine-3-mire} pour sa composante rouge}
+	\label{fig:sur_echan_2_comp_rouge}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{graphics/sur_echant.pdf}
+	\end{center}
+	\caption{Schéma du sur-échantillonnage}
+	\label{fig:sur_echant}
+\end{figure}
+
+\newpage
+
+\subsection{Sous-échantillonnage suivi d'un sur-échantillonnage}
+
+\begin{paragraph}{Voici le code correspondant:}
+\begin{verbatim}
+img = imread("ti-semaine-3-mire.png");
+ssEchImg = sousEch(img,2);
+surEchImg = surEch(ssEchImg,2);
+imshow(surEchImg);
+\end{verbatim}
+\end{paragraph}
+
+En appliquant successivement le sous-échantillonnage suivi du sur-échantillonnage on obtient la Fig.\ref{fig:comp_avec_et_sans_echant}.  
+
+On peut observer un léger flou autour des changement de couleurs. Ceci est dû à une perte de donnée lors du sous-échantillonnage qui est répercutée sur l'image finale. (\emph{cf. Fig.}\ref{fig:sous_sur_echant}). On ne se rend pas bien compte du flou généré sur ce rapport c'est pourquoi je vous ai donné en plus dans cette archive l'image (\emph{cf.}Fig.\ref{fig:comp_avec_et_sans_echant}).
+
+Remarque: si on faisait l'opération dans le sens inverse (sur-échantillonnage puis sous-échantillonnage) il n'y aurait pas de perte de données (\emph{cf.}Fig.\ref{fig:sur_sous_echant}).
+
 \section {Quantification}
+
+\subsection{Fonction \emph{quantif(img,n)}}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeRed{function} im = quantif(img,n)
+    quantificateur = 2^n
+     
+    img = img ./(256/quantificateur)
+
+    round(img)
+
+    img = img.*(256/quantificateur)
+    
+    im = img
+\codeRed{endfunction}
+\end{Verbatim}
+
+\subsection{Calcul des images qui seraient obtenues avec une quantification sur 6 bits, 4 bits et enfin 1 bit de la composante verte de l'image de mire.}
+
+Voici le code et les images correspondantes :
+\begin{verbatim}
+img = imread("ti-semaine-3-mire.png");
+img = img (:,:,2);
+
+img = quantif(img,6);
+imshow(img);
+
+img = quantif(img,4);
+imshow(img);
+
+img = quantif(img,1);
+imshow(img);
+\end{verbatim}
+
+\begin{itemize}
+\item quantification sur 6 bits: Fig.\ref{fig:quantif_6_bit_comp_v}
+\item quantification sur 4 bits: Fig.\ref{fig:quantif_4_bit_comp_v}
+\item quantification sur 1 bit: Fig.\ref{fig:quantif_1_bit_comp_v}
+\end{itemize}
+~\\
+On observe que moins il y a de bit pour quantifier les couleurs moins il y a de couleurs différentes sur l'image obtenue. Pour 1 bit il n'y en a que 2 ($2^1$), pour 4 bits il y en a 16 ($2^4$) et pour 6 bit il y en a 64 ($2^6$).
+
+\subsection{Modification de l'image de Lena}
+
+Voici le code correspondant aux modifications des composantes de l'image:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+img = imread("ti-semaine-3-lena.png");
+
+\codeBlue{// Composante rouge sous-échantillonnée d'un facteur 2 en horizontal}
+\codeBlue{// et en vertical et quantifiée sur 5 bits}
+img1 = img(:,:,1);
+img1 = sousEch(img1,2);
+img1 = quantif(img1,5);
+
+\codeBlue{// Composante bleue sous-échantillonnée d'un facteur 4 en horizontal}
+\codeBlue{// et en vertical et quantifiée sur 3 bits}
+img2 = img (:,:,3);
+img2 = sousEch(img2,4);
+img2 = quantif(img2,3);
+
+\codeBlue{// Sur-échantillonnage des composantes afin d'avoir des matrices de même taille}
+img1 = surEch(img1,2);
+img2 = surEch(img2,4);
+
+\codeBlue{// On enregistre les resultats dans une nouvelle image}
+newimg = zeros(size(img,1),size(img,2),3);
+newimg(:,:,1) = img1;
+newimg(:,:,2) = im2double(img(:,:,2));
+newimg(:,:,3) = img2;
+
+imshow(newimg);
+\end{Verbatim}
+
+L'exécution du code précédant fournit la Fig.\ref{fig:lena_composantes_modifiees}. D'après ces résultats je pense que ma fonction \emph{quantif(img,n)} n'est pas bonne car je devrais être en mesure de visualiser des changements par rapport à l'image initial. J'ai essayé de changer les valeurs de quantifications mais je n'ai pas vu de différences non plus.
 
 \section {Repliement de spectre}
 
+\subsection{Période du motif}
 
+On observe qu'il y a 8 motifs sur cette images (8 bandes blanches et 8 bandes noires).Un motif représente donc une bande blanche suivie d'une bande noire.
+
+De plus l'image fait 800 pixels en largeur, 1 pouce = 0.0254 mètre, et la résolution horizontale est de 150 pixels/pouce.
+
+\begin{paragraph}{période en pixels}
+\begin{align*}
+une ~ periode &= 800 / 8 ~ pixels \\
+une ~ periode &= 100 ~ pixels
+\end{align*}
+\end{paragraph}
+
+\begin{paragraph}{fréquence spatiale en cycle/pixels}
+\begin{align*}
+frequence  ~ spatiale &= 1/100 ~ cycle/pixels
+\end{align*}
+\end{paragraph}
+
+\begin{paragraph}{période en mètres}
+\begin{align*}
+une ~ periode &= 100 ~ pixels \\
+resolution &= 150 pixels/pouce \\
+1 ~ pouce &= 0.0254 ~ m \\
+\\
+une ~ periode &= 100 / 150 ~ pouce \\
+une ~ periode &= 2 / 3 ~ pouce \\
+une ~ periode &\approx 2 / 3 * 0.0254 ~ m \\
+une ~ periode &\approx 0.016933333 ~ m \\
+\end{align*}
+\end{paragraph}
+
+\begin{paragraph}{fréquence spatiale en cycle/m}
+\begin{align*}
+frequence  ~ spatiale &\approx 1/0.016933333 ~ cycle/m \\
+frequence  ~ spatiale &\approx 59.055119273 ~ cycle/m
+\end{align*}
+\end{paragraph}
+
+\subsection{Sous-échantillonnage de l'image du motif sinusoïdal afin de simuler des grilles d'échantillonnage de résolutions:}
+
+\begin{itemize}
+\item 10 fois plus faibles: Fig.\ref{fig:sinus_echant_10}
+\item 20 fois plus faibles: Fig.\ref{fig:sinus_echant_20}
+\item 50 fois plus faibles: Fig.\ref{fig:sinus_echant_50}
+\item 75 fois plus faibles: Fig.\ref{fig:sinus_echant_75}
+\end{itemize}
+~ \\
+On observe que lorsqu'on diminue la taille de la grille d'échantillonnage jusqu'a 50 fois plus faibles le nombre de motif reste inchangé, seul les couleurs changent. Mais lorsqu'on diminue la taille 75 fois, il n'y a plus autant de motif.
+
+Calculons sa fréquence pixels afin de voir si il y a un changement selon la taille de la grille d'échantillonnage. On observe qu'il y a 2.5 motifs sur cette figure.
+
+\begin{align*}
+une ~ periode &= 800 / 2.5 ~ pixels \\
+une ~ periode &= 320 ~ pixels \\
+frequence  ~ spatiale &=  1/320 ~ cycle/pixels \\
+\end{align*}
+
+On voit bien qu'il y a un changement dans la période et donc qu'il y a un seuil pour lequel la fréquence de la période diminuera si on diminue encore la taille de la grille.
+
+\section{Annexe}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[height=9cm,width=19cm,angle=90]{comp_avec_et_sans_echant.png}
+	\end{center}
+	\caption{De bas en haut: image composante rouge, image composante rouge sous-échantillonnée de facteur 2 puis sur-échantillonné de facteur 2}
+	\label{fig:comp_avec_et_sans_echant}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[height=19cm,width=13cm]{graphics/sous_sur_echant.pdf}
+	\end{center}
+	\caption{Schéma de l'application successive du sous-échantillonnage suivi du sur-échantillonnage}
+	\label{fig:sous_sur_echant}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[height=19cm,width=13cm]{graphics/sur_sous_echant.pdf}
+	\end{center}
+	\caption{Schéma de l'application successive du sur-échantillonnage suivi du sous-échantillonnage}
+	\label{fig:sur_sous_echant}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{quantif_6_bit_comp_v.png}
+	\end{center}
+	\caption{Quantification sur 6 bits de la composante verte de l'image de mire}
+	\label{fig:quantif_6_bit_comp_v}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{quantif_4_bit_comp_v.png}
+	\end{center}
+	\caption{Quantification sur 4 bits de la composante verte de l'image de mire}
+	\label{fig:quantif_4_bit_comp_v}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{quantif_1_bit_comp_v.png}
+	\end{center}
+	\caption{Quantification sur 1 bit de la composante verte de l'image de mire}
+	\label{fig:quantif_1_bit_comp_v}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{lena_composantes_modifiees.png}
+	\end{center}
+	\caption{Modification de l'image de Lena: composante rouge sous-échantillonnée d'un facteur 2 en horizontal et en vertical et quantifiée sur 5 bits, composante verte identique à l'original, composante bleue sous-échantillonnée d'un facteur 4 en horizontal et en vertical et quantifiée sur 3 bits}
+	\label{fig:lena_composantes_modifiees}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{sinus_echant_10.png}
+	\end{center}
+	\caption{Sous-échantillonnage de l'image du motif sinusoïdal afin de simuler une grille d'échantillonnage de résolution 10 fois plus petite}
+	\label{fig:sinus_echant_10}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{sinus_echant_20.png}
+	\end{center}
+	\caption{Sous-échantillonnage de l'image du motif sinusoïdal afin de simuler une grille d'échantillonnage de résolution 20 fois plus petite}
+	\label{fig:sinus_echant_20}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{sinus_echant_50.png}
+	\end{center}
+	\caption{Sous-échantillonnage de l'image du motif sinusoïdal afin de simuler une grille d'échantillonnage de résolution 50 fois plus petite}
+	\label{fig:sinus_echant_50}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=10cm]{sinus_echant_75.png}
+	\end{center}
+	\caption{Sous-échantillonnage de l'image du motif sinusoïdal afin de simuler une grille d'échantillonnage de résolution 75 fois plus petite}
+	\label{fig:sinus_echant_75}
+\end{figure}
 
 \end{document}

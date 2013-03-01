@@ -51,7 +51,7 @@ function m = RotationX(theta)
     m = [1,     0,        0,       0;
          0,cosd(theta),-sind(theta), 0;
          0,sind(theta),cosd(theta),  0;
-         0,     0,        0,       1]
+         0,     0,        0,       1];
 endfunction
 
 // Calcule la matrice homogène définissant 
@@ -60,7 +60,7 @@ function m = RotationY(theta)
     m = [cosd(theta),0,sind(theta), 0;
          0,         0,      0,    0;   
          -sind(theta),0,cosd(theta),0;
-         0,         0,      0,    1]
+         0,         0,      0,    1];
 endfunction
 
 // Calcule la matrice homogène définissant 
@@ -69,16 +69,16 @@ function m = RotationZ(theta)
     m = [cosd(theta),-sind(theta),0 ,0;
          sind(theta),cosd(theta) ,0 ,0;   
          0         ,0          ,1 ,0;
-         0         ,0          ,0 ,1]
+         0         ,0          ,0 ,1];
 endfunction
 
 // Calcule la matrice homogène définissant 
 // la translation de vecteur (x,y,z).
-function m = translation(x,y,z)
+function m = Translation(x,y,z)
     m = [1,0,0,x;
          0,1,0,y;
          0,0,1,z;
-         0,0,0,1]
+         0,0,0,1];
 endfunction
 
 
@@ -86,10 +86,9 @@ endfunction
 // f = distance focal
 // matExtr = matrice extrinsec
 function m = projection(f, matExtr)
-    proj = [f, 0, 0;
-            0, f, 0;
-            0, 0, 1]
-            
+    proj = [f, 0, 0, 0;
+            0, f, 0, 0;
+            0, 0, 1, 0]
     m = proj * matExtr
 endfunction
 
@@ -99,12 +98,18 @@ endfunction
 // Oc = colonne
 // Ol = ligne
 // xiyiw = matrice de projection
-function m = chgtRepere(Sc, Sl, Oc, Ol, xiyiw)
+function m = Intrinsec(f,Sc, Sl, Oc, Ol, matExtr)
+    proj = [f, 0, 0, 0;
+            0, f, 0, 0;
+            0, 0, 1, 0]
+            
+    xiyi = proj * matExtr;
+    
     m1 = [1/Sc,  0,   Oc;
            0,   1/Sl, Ol;
            0,     0,   1]
     
-    m = m1*xiyiw;
+    m = m1*xiyi;
 endfunction
 
 

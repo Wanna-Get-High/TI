@@ -14,16 +14,27 @@
 Voici la fonction correspondant à la création de ce cube:
 \begin{verbatimtab}
 function m = cube()
-	p1 = [-0.5, -0.5, -0.5, 1];
-	p2 = [0.5, -0.5, -0.5, 1];
-	p3 = [0.5, 0.5, -0.5, 1];
-	p4 = [-0.5, 0.5, -0.5, 1];
-	p5 = [-0.5, -0.5, 0.5, 1];
-	p6 = [0.5, -0.5, 0.5, 1];
-	p7 = [0.5, 0.5, 0.5, 1];
-	p8 = [0.5, -0.5, 0.5, 1];
+    p1 = [-0.5, -0.5, -0.5, 1];
+    p2 = [0.5, -0.5, -0.5, 1];
+    p3 = [0.5, 0.5, -0.5, 1];
+    p4 = [-0.5, 0.5, -0.5, 1];
+    p5 = [-0.5, -0.5, 0.5, 1];
+    p6 = [0.5, -0.5, 0.5, 1];
+    p7 = [0.5, 0.5, 0.5, 1];
+    p8 = [-0.5, 0.5, 0.5, 1];
     
-	m = [p1',p2',p3',p4',p5',p6',p7',p8']; 
+    m = [p1',p2',p3',p4',p5',p6',p7',p8']; 
+endfunction
+
+function seg = segmentCube()
+    
+    liste  = [1:4];
+    liste1 = liste+4;
+    
+    liste2 = moveNElemToTheEnd(liste,liste(1,1))
+    liste3 = moveNElemToTheEnd(liste1,liste1(1,1))
+    
+    seg = [liste, liste1, liste; liste2, liste3,liste1] 
 endfunction
 \end{verbatimtab}
 
@@ -39,6 +50,13 @@ function m = grille()
 
     m = [x, x, x, x; y, y+1,y+2, y+3; z; w]
 endfunction
+
+function seg = segmentGrille()
+    liste  = [1:5];
+    liste2 = [1:6];
+    seg = [liste, liste+6, liste+12, liste+18, liste2, liste2+6, liste2+12;
+           liste+1, liste+7, liste+13, liste+19, liste2+6, liste2+12, liste2+18];
+endfunction
 \end{verbatim}
 
 \section{Matrice extrinsèque}
@@ -51,9 +69,9 @@ Voici les quatre fonctions qui permettent de calculer des matrices extrinsèques:
 \begin{verbatim}
 function m = RotationX(theta)
     m = [1,     0,        0,       0;
-         0,cos(theta),-sin(theta), 0;
-         0,sin(theta),cos(theta),  0;
-         0,     0,        0,       1]
+         0,cosd(theta),-sind(theta), 0;
+         0,sind(theta),cosd(theta),  0;
+         0,     0,        0,       1];
 endfunction
 \end{verbatim}
 \end{paragraph}
@@ -61,10 +79,10 @@ endfunction
 \begin{paragraph}{\emph{RotationY(theta)}}~\\
 \begin{verbatim}
 function m = RotationY(theta)
-    m = [cos(theta),0,sin(theta), 0;
+    m = [cosd(theta),0,sind(theta), 0;
          0,         0,      0,    0;   
-         -sin(theta),0,cos(theta),0;
-         0,         0,      0,    1]
+         -sind(theta),0,cosd(theta),0;
+         0,         0,      0,    1];
 endfunction
 \end{verbatim}
 \end{paragraph}
@@ -72,21 +90,21 @@ endfunction
 \begin{paragraph}{\emph{RotationZ(theta)}}~\\
 \begin{verbatim}
 function m = RotationZ(theta)
-    m = [cos(theta),-sin(theta),0 ,0;
-         sin(theta),cos(theta) ,0 ,0;   
+    m = [cosd(theta),-sind(theta),0 ,0;
+         sind(theta),cosd(theta) ,0 ,0;   
          0         ,0          ,1 ,0;
-         0         ,0          ,0 ,1]
+         0         ,0          ,0 ,1];
 endfunction
 \end{verbatim}
 \end{paragraph}
 
 \begin{paragraph}{\emph{Translation(x,y,z)}}~\\
 \begin{verbatim}
-function m = translation(x,y,z)
+function m = Translation(x,y,z)
     m = [1,0,0,x;
          0,1,0,y;
          0,0,1,z;
-         0,0,0,1]
+         0,0,0,1];
 endfunction
 \end{verbatim}
 \end{paragraph}
@@ -97,44 +115,76 @@ endfunction
 
 Voici le code correspondant à la création de cette matrice:
 \begin{verbatim}
-?????????
+translation = Translation(0,0,-5);
+rotation = RotationX(90);
+position = translation * rotation;
 \end{verbatim}
 
+On peut le vérifié de cette façon, avec ce code:
+\begin{verbatim}
+translation = Translation(0,0,-5);
+rotation = RotationZ(45);
+position = translation * rotation;
+\end{verbatim}
+
+On obtient la Fig.~\ref{fig:cube_biai} 
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[width=8cm]{cube_biai.png}
+	\end{center}
+	\caption{cube translater sur (1,1,-5) puis tourné à 45 degré sur l'axe Z }
+	\label{fig:cube_biai}
+\end{figure}
+
+
+Si après la rotation de 90 degré sur l'axe X on ajoute \verb?rotation = rotation * RotationY(45);? cela nous donne la même figure que précédant vu que l'axe des Y se trouve dans l'axe de la caméra.
+
+\newpage
 
 \subsubsection{Axe optique selon la diagonale principale du repère, regardant le centre du repère. Centre optique situé à une distance de 5 mètres du centre du repère. Verticale de la caméra dans un plan contenant z}
 
 Voici le code correspondant à la création de cette matrice:
 \begin{verbatim}
-????????????
+position1 = Translation(0,0,5)*RotationY(135)*RotationX(45);
 \end{verbatim}
 
 
 \section{Matrice intrinsèque}
 
-Voici le calcule de la matrice intrinsèque décrit dans le sujet:
+Voici la fonction permettant de calculer la matrice intrinsèque:
 
 \begin{verbatimtab}
-??
+function m = Intrinsec(f,Sc, Sl, Oc, Ol, matExtr)
+    proj = [f, 0, 0, 0;
+            0, f, 0, 0;
+            0, 0, 1, 0]
+            
+    xiyi = proj * matExtr;
+    
+    m1 = [1/Sc,  0,   Oc;
+           0,   1/Sl, Ol;
+           0,     0,   1]
+    
+    m = m1*xiyiw;
+endfunction
 \end{verbatimtab}
 
-+ en quoi le changement de la distance focale a elle une influence sur la scène regarder.
 
-\section{Projection et affichage des objets}
+Voici le code que j'ai pour tester l'affichage:
+\begin{verbatimtab}
+// le cube
+c = cube();
+// segment du cube
+sc = segmentCube();
 
-Représentation des images obtenues par la caméra définie précédemment:
+position1 = Translation(0,0,5)*RotationY(135)*RotationX(45);
+c2=position1*c;
+matIntrinsec = Intrinsec(20,8.8/800,6.6/600,400,300,c2);
+tiAfficheObjet2D(1,[5,5],matIntrinsec,sc);
+\end{verbatimtab}
 
-\subsection{Pour la grille et le cube}
-
-??????????????????????\\
-??????????????????????\\
-??????????????????????\\
-
-\subsection{pour les deux positions définies par les matrices extrinsèques calculées}
-
-
-??????????????????????\\
-??????????????????????\\
-??????????????????????\\
+Je n'arrive pas à afficher les images malgré plusieurs tentatives.
 
 
 \end{document}
