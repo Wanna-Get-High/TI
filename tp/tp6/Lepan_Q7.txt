@@ -1,0 +1,125 @@
+// Une macro-squelette pour determiner la direction et la fréquence d'un cosinus.
+// Version: 0.1
+// Date: 14/07/2006
+// Author: L. Macaire
+ 
+macro "direction FFT" {
+	
+	// the arrays to classify the texture of the images
+	classe_horizontale = newArray();
+	classe_verticale = newArray();
+	classe_diagonale = newArray();
+
+	// the arrays containing the spatial frequences
+	classe_horizontale_freq = newArray();
+	classe_verticale_freq = newArray();
+	classe_diagonale_freq = newArray();
+
+	// the current image name construction
+	image_name_letter = "";
+	image_name_size = ""
+	image_name = "";
+
+	// For all of the images
+	for (k=1; k<19; k++)
+	{
+		// Getting the size_name
+		if (k <= 6 )		{	image_name_size = "128_"; } 
+		else if (k<=12)	{	image_name_size = "256_"; }
+		else  				{	image_name_size = "512_"; }	
+		// Getting the letter_name
+		if (k % 6 == 0) 		{ image_name_letter = "f.jpg"; }
+		else if (k % 6 == 5) 	{ image_name_letter = "e.jpg"; }
+		else if (k % 6 == 4) 	{ image_name_letter = "d.jpg"; }
+		else if (k % 6 == 3) 	{ image_name_letter = "c.jpg"; }
+		else if (k % 6 == 2) 	{ image_name_letter = "b.jpg"; }
+		else if (k % 6 == 1)	{ image_name_letter = "a.jpg"; }
+
+		// Opening the image
+		image_name = image_name_size + image_name_letter;
+		open (image_name_size + image_name_letter);
+		
+		// récupération du ID de l'image
+		image = getImageID();
+
+		// application de la FFT
+		run("FFT", "title='FFT de l'image courante'");
+
+		// récupération de ID de la FFT : du plan de fourier
+		fourier = getImageID();
+
+		// Getting the size of the fourier plan
+		W = getWidth();
+		H = getHeight();
+		
+		max_1 = 0; 
+		i_max_1 = 0;
+		j_max_1 = 0;
+	
+		max_2 = 0; 
+		i_max_2 = 0;
+		j_max_2 = 0;
+
+		// Get the primary and secondary ray position
+		for (j=0; j<H; j++) 
+		{
+			for (i=0; i<W; i++) 
+			{
+				p = getPixel(i,j);
+				
+				// get the primary ray
+				if ( max_1 < p)
+				{
+					max_1 =p;
+					i_max_1 = i;
+					j_max_1 =j;
+				} 
+		
+				// get the secondary ray
+				if ( max_2 < p && max_1 > p)
+				{
+					max_2 =p;
+					i_max_2 = i;
+					j_max_2 =j;
+				}
+			}
+		}
+
+		// Calculating the distance between the primary ray and the second one
+		distance = sqrt(pow(i_max_2 - i_max_1, 2) + pow(j_max_2 - j_max_1, 2));
+
+		// Calculating the spatial frequency of the current image
+		omega = distance / sqrt(W*H);
+		
+		// store the name of the image into the right array for classification
+		// and the spacial frequencies
+		if (i_max_1 != i_max_2 && j_max_1 != j_max_2) 
+		{
+			classe_diagonale = Array.concat(classe_diagonale, image_name);
+			classe_diagonale_freq = Array.concat(classe_diagonale_freq, omega);
+		} 
+		else if (i_max_1 != i_max_2) 
+		{
+			classe_horizontale = Array.concat(classe_horizontale, image_name);
+			classe_horizontale_freq = Array.concat(classe_horizontale_freq, omega);
+		} 
+		else if (j_max_1 != j_max_2)
+		{
+			classe_verticale = Array.concat(classe_verticale, image_name);
+			classe_verticale_freq = Array.concat(classe_verticale_freq, omega);
+		}
+	}
+
+	// print the elements of the different classes
+	print("classe_diagonale : ");
+	Array.print(classe_diagonale);
+	Array.print(classe_diagonale_freq);
+
+	print("classe_horizontale : ");
+	Array.print(classe_horizontale);
+	Array.print(classe_horizontale_freq);
+
+	print("classe_verticale : ");
+	Array.print(classe_verticale);
+	Array.print(classe_verticale_freq);
+}

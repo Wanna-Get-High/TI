@@ -1,0 +1,345 @@
+\documentclass[a4paper,10pt]{article}
+\input{/Users/WannaGetHigh/workspace/latex/macros.tex}
+
+\title{TP 2: Atténuation du phénomène de moiré version 2012}
+\author{François \bsc{Lepan}}
+
+\begin{document}
+\maketitle
+
+\section{Manipulations}
+
+Tout d'abord on charge l'image "256a.jpg" (\emph{cf.}~Fig.~\ref{fig:256a})
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=10cm]{../256_a.jpg}
+\end{center}
+	\caption{Image 256\_a.jpg}
+	\label{fig:256a}
+\end{figure}
+
+\subsection{Fréquence spatiale $\omega$(cycle/pixel) du motif cyclique de la Fig.~\ref{fig:256a} }
+
+Grâce a l'outils \emph{scolling tool} on peut récupérer la période spatiale T qui est de 5 pixels.\\
+Or la fréquence spatiale F est l'inverse de la période spatiale. \\
+Donc F = $\frac{1}{5} =  0.2 ~cylcle/pixel$
+
+\subsection{Coordonnées de la raie maximale}
+
+Voici le code correspondant à l'affichage des coordonnées :
+\begin{Verbatim}[commandchars=\\\{\}]
+max_1 = 0; 
+i_max_1 = 0;
+j_max_1 = 0;
+
+\codeBlue{// Get the primary and secondary ray position}
+for (j=0; j<H; j++) 
+\{
+	for (i=0; i<W; i++) 
+	\{
+		p = getPixel(i,j);
+		
+		\codeBlue{// get the primary ray}
+		if ( max_1 < p)
+		\{
+			max_1 = p;
+			i_max_1 = i;
+			j_max_1 =j;
+		\} 
+	\}
+\}
+
+\codeBlue{// Printing the value of the points}
+print ("i_max_1 = ", i_max_1, ", j_max_1 = ", j_max_1);
+\end{Verbatim}
+
+
+Les valeurs de \emph{i\_max\_1} et \emph{j\_max\_1} correspondants aux coordonnées de la raie maximale dans le plan de Fourier valent après exécution du code précédent : (128,128)
+
+\subsection{Affichage de la raie secondaire ainsi que la distance la séparant de la raie principale}
+
+Voici le code correspondant :
+\begin{Verbatim}[commandchars=\\\{\}]
+max_1 = 0; 
+i_max_1 = 0;
+j_max_1 = 0;
+
+max_2 = 0; 
+i_max_2 = 0;
+j_max_2 = 0;
+
+\codeBlue{// Get the primary and secondary ray position}
+for (j=0; j<H; j++) 
+\{
+	for (i=0; i<W; i++) 
+	\{
+		p = getPixel(i,j);
+		
+		\codeBlue{// get the primary ray}
+		if ( max_1 < p)
+		\{
+			max_1 = p;
+			i_max_1 = i;
+			j_max_1 =j;
+		\} 
+
+		\codeBlue{// get the secondary ray}
+		if ( max_2 < p && max_1 > p)
+		\{
+			max_2 =p;
+			i_max_2 = i;
+			j_max_2 =j;
+		\}
+	\}
+\}
+
+\codeBlue{// Calculating the distance between the two ray}
+distance = sqrt(pow(i_max_2 - i_max_1, 2) + pow(j_max_2 - j_max_1, 2));
+
+\codeBlue{// Printing the value of the points and the distance between them}
+print ("i_max_1 = ", i_max_1, ", j_max_1 = ", j_max_1);
+print ("i_max_2 = ", i_max_2, ", j_max_2 = ", j_max_2);
+print ("D = ", distance);
+\end{Verbatim}
+
+\subsection{Tableau regroupant les informations (Direction, $\omega$, $P_x$, etc) des images de taille 128x128}
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Image & Direction & T  & $\omega$ &$P_x$ &$P_y$ & D  \\
+ & (x,y,xy) &(pixel dans l'image) & (cycle/pixel)  & (dans fourier) & (dans fourier) & (dans fourier) \\
+ \hline
+128a & verticale & 5 & 0.2 & 64 & 90 & 26 \\
+\hline
+128b & diagonale & 1.77 & 0.57 & 115 & 115 & 72 \\
+\hline
+128c & horizontale & 5 & 0.2 & 90 & 64 & 26 \\
+\hline
+128d & verticale & 10 & 0.1 & 64 & 77 & 13 \\
+\hline
+128e & diagonale & 7.14 & 0.14 & 77 & 77 & 18 \\
+\hline
+128f & horizontale & 10 & 0.1 & 77 & 64 & 13 \\
+\hline
+\end{tabular}
+
+
+\begin{paragraph} {Pour ces images 128x128 on a:}~\\
+$\omega_a$ = 26 / 128 = 0.2 \\
+$\omega_c$ = 26 / 128 = 0.2 \\
+$\omega_d$ = 13 / 128 = 0.1 \\
+$\omega_f$ = 13 / 128 = 0.1 \\
+\end{paragraph}
+
+\subsection{Tableau regroupant les informations (Direction, $\omega$, $P_x$, etc) des images de taille 256x256}
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Image & Direction & T  & $\omega$ &$P_x$ &$P_y$ & D  \\
+ & (x,y,xy) &(pixel dans l'image) & (cycle/pixel)  & (dans fourier) & (dans fourier) & (dans fourier) \\
+ \hline
+256a & verticale & 5 & 0.2 & 128 & 179 & 51 \\
+\hline
+256b & diagonale & 3.6 & 0.28 & 179 & 179 & 72 \\
+\hline
+256c & horizontale & 5 & 0.2 & 179 & 128 & 51 \\
+\hline
+256d & verticale & 10 & 0.1 & 128 & 154 & 26 \\
+\hline
+256e & diagonale & 2.33 & 0.43 & 205 & 205 & 108.9 \\
+\hline
+256f & horizontale & 10 & 0.1 & 154 & 128 & 26 \\
+\hline
+\end{tabular}
+
+
+\begin{paragraph} {Pour ces images 256x256 on a:}~\\
+$\omega_a$ = 51 / 256 = 0.2 \\
+$\omega_c$ = 51 / 256 = 0.2 \\
+$\omega_d$ = 26 / 256 = 0.1 \\
+$\omega_f$ = 26 / 256 = 0.1 \\
+\end{paragraph}
+
+\subsection{Tableau regroupant les informations (Direction, $\omega$, $P_x$, etc) des images de taille 512x512}
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Image & Direction & T  & $\omega$ &$P_x$ &$P_y$ & D  \\
+ & (x,y,xy) &(pixel dans l'image) & (cycle/pixel)  & (dans fourier) & (dans fourier) & (dans fourier) \\
+ \hline
+512a & verticale & 5 & 0.2 & 256 & 358 & 102 \\
+\hline
+512b & diagonale & 1.77 & 0.57 & 461 & 461 & 290 \\
+\hline
+512c & horizontale & 5 & 0.2 & 358 & 256 & 102 \\
+\hline
+512d & verticale & 10 & 0.1 & 256 & 307 & 51 \\
+\hline
+512e & diagonale & 7.14 & 0.14 & 307 & 307 & 72 \\
+\hline
+512f & horizontale & 10 & 0.1 & 307 & 256 & 51 \\
+\hline
+\end{tabular}
+
+
+\begin{paragraph} {Pour ces images 512x512 on a:}~\\
+$\omega_a$ = 102 / 512 = 0.2 \\
+$\omega_c$ = 102 / 512 = 0.2 \\
+$\omega_d$ = 51 / 512 = 0.1 \\
+$\omega_f$ = 51 / 512 = 0.1 \\
+\end{paragraph}
+
+
+On se rend bien compte à la fin que la taille de l'image est en rapport avec $\omega$. On a la rapport suivant: \\
+\\
+$\omega~=~\frac{D}{\sqrt{taille\_image}}$
+
+\newpage
+
+\subsection{Classification de toutes les images en trois classes: horizontale, verticale, diagonale et calcule de la fréquence spatiale pour chaque image}
+
+Afin de classifier ces images il suffit de regarder les différence sur la position de la raie principale et la raie secondaire. Si pour une image I c'est le x qui varie alors il faut placé I dans la classe horizontale. Si c'est le y qui varie alors il faut placé I dans la classe verticale. Et si c'est x et y qui varie alors il faut placé I dans la classe diagonale. 
+
+Et ensuite pour calculer la fréquence spatiale il suffit d'utiliser la formule $\omega~=~\frac{D}{\sqrt{taille\_image}}$.\\
+~
+
+Voici le code correspondant:
+\begin{Verbatim}[commandchars=\\\{\}]
+\codeRed{macro} "direction FFT" \{
+	
+	\codeBlue{// The arrays to classify the texture of the images}
+	classe_horizontale = newArray();
+	classe_verticale = newArray();
+	classe_diagonale = newArray();
+
+	\codeBlue{// The arrays containing the spatial frequences}
+	classe_horizontale_freq = newArray();
+	classe_verticale_freq = newArray();
+	classe_diagonale_freq = newArray();
+
+	\codeBlue{// The current image name construction}
+	image_name_letter = "";
+	image_name_size = ""
+	image_name = "";
+
+	\codeBlue{// For all of the images}
+	for (k=1; k<19; k++)
+	\{
+		\codeBlue{// Getting the size_name}
+		if (k <= 6 )    \{ image_name_size = "128_"; \} 
+		else if (k<=12) \{ image_name_size = "256_"; \}
+		else            \{ image_name_size = "512_"; \}	
+		
+		\codeBlue{// Getting the letter_name}
+		if (k % 6 == 0)      \{ image_name_letter = "f.jpg"; \}
+		else if (k % 6 == 5) \{ image_name_letter = "e.jpg"; \}
+		else if (k % 6 == 4) \{ image_name_letter = "d.jpg"; \}
+		else if (k % 6 == 3) \{ image_name_letter = "c.jpg"; \}
+		else if (k % 6 == 2) \{ image_name_letter = "b.jpg"; \}
+		else if (k % 6 == 1) \{ image_name_letter = "a.jpg"; \}
+
+		\codeBlue{// Opening the image}
+		image_name = image_name_size + image_name_letter;
+		open (image_name_size + image_name_letter);
+		
+		\codeBlue{// récupération du ID de l'image}
+		image = getImageID();
+
+		\codeBlue{// application de la FFT}
+		run("FFT", "title='FFT de l'image courante'");
+
+		\codeBlue{// récupération de ID de la FFT : du plan de fourier}
+		fourier = getImageID();
+
+		\codeBlue{// Getting the size of the fourier plan}
+		W = getWidth();
+		H = getHeight();
+		
+		max_1 = 0; 
+		i_max_1 = 0;
+		j_max_1 = 0;
+	
+		max_2 = 0; 
+		i_max_2 = 0;
+		j_max_2 = 0;
+
+		\codeBlue{// Get the primary and secondary ray position}
+		for (j=0; j<H; j++) 
+		\{
+			for (i=0; i<W; i++) 
+			\{
+				p = getPixel(i,j);
+				
+				\codeBlue{// get the primary ray}
+				if ( max_1 < p)
+				\{
+					max_1 =p;
+					i_max_1 = i;
+					j_max_1 =j;
+				\} 
+		
+				\codeBlue{// get the secondary ray}
+				if ( max_2 < p && max_1 > p)
+				\{
+					max_2 =p;
+					i_max_2 = i;
+					j_max_2 =j;
+				\}
+			\}
+		\}
+
+		\codeBlue{// Calculating the distance between the primary ray and the second one}
+		distance = sqrt(pow(i_max_2 - i_max_1, 2) + pow(j_max_2 - j_max_1, 2));
+
+		\codeBlue{// Calculating the spatial frequency of the current image}
+		omega = distance / sqrt(W*H);
+		
+		\codeBlue{// store the name of the image into the right array for classification}
+		\codeBlue{// and the spacial frequencies}
+		if (i_max_1 != i_max_2 && j_max_1 != j_max_2) 
+		\{
+			classe_diagonale = Array.concat(classe_diagonale, image_name);
+			classe_diagonale_freq = Array.concat(classe_diagonale_freq, omega);
+		\} 
+		else if (i_max_1 != i_max_2) 
+		\{
+			classe_horizontale = Array.concat(classe_horizontale, image_name);
+			classe_horizontale_freq = Array.concat(classe_horizontale_freq, omega);
+		\} 
+		else if (j_max_1 != j_max_2)
+		\{
+			classe_verticale = Array.concat(classe_verticale, image_name);
+			classe_verticale_freq = Array.concat(classe_verticale_freq, omega);
+		\}
+	\}
+
+	\codeBlue{// print the elements of the different classes}
+	print("classe_diagonale : ");
+	Array.print(classe_diagonale);
+	Array.print(classe_diagonale_freq);
+
+	print("classe_horizontale : ");
+	Array.print(classe_horizontale);
+	Array.print(classe_horizontale_freq);
+
+	print("classe_verticale : ");
+	Array.print(classe_verticale);
+	Array.print(classe_verticale_freq);
+\}
+\end{Verbatim}
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
