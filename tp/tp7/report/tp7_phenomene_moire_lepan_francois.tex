@@ -1,0 +1,93 @@
+ \documentclass[a4paper,10pt]{article}
+\input{/Users/WannaGetHigh/workspace/latex/macros.tex}
+
+\title{TP 7: Atténuation du phénomène de moiré version 2012}
+\author{François \bsc{Lepan}}
+
+\begin{document}
+\maketitle
+
+\section{Manipulations}
+\subsection{Après un sous-échantillonnage d'un facteur 4 dans les deux directions}
+
+On observe sur la FTT (\emph{cf.} \ref{fig:FTT_phenom_moire_sous_ech_fact_4}) de l'image sous échantillonné
+(\emph{cf.} \ref{fig:phenom_moire_sous_ech_fact_4}) qu'il y a 4 "courbes" qui tendent vers le centre. Ce sont ces courbes qui donne l'effet de moiré
+
+Sachant que $\omega_{max}$  = 0.5 et que l'on à sous-échantillonné l'image d'un facteur 4 dans les deux directions. 
+
+Les différences se situent pour $0.5/4 = 0.125 \leq F \leq 0.5$ dans domaines fréquentiels du plan de fourier.
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/phenom_moire_sous_ech_fact_4.png}
+\end{center}
+	\caption{Image du phénomène de Moire sous-échantillonné d'un facteur 4 dans les deux directions}
+	\label{fig:phenom_moire_sous_ech_fact_4}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/FTT_phenom_moire_sous_ech_fact_4.png}
+\end{center}
+	\caption{FTT de l'mage du phénomène de Moire sous-échantillonné d'un facteur 4 dans les deux directions}
+	\label{fig:FTT_phenom_moire_sous_ech_fact_4}
+\end{figure}
+
+\newpage
+
+\subsection{Relation entre les images \emph{1024\_moire.jpg}, \emph{1024\_moire\_f1.jpg} et \emph{1024\_moire\_f2.jpg}}
+
+Après avoir manipulé les images en les additionnant on trouve que:
+
+ \emph{1024\_moire\_f1.jpg} = \emph{1024\_moire.jpg} - \emph{1024\_moire\_f2.jpg}.
+
+\subsection{Quelle est la fréquence spatiale $\omega1$ (cycle/pixel) du motif cyclique de l'image:}
+
+En réutilisant la macro du TP précédant on trouve comme valeurs:
+
+\begin{paragraph}{\emph{1024\_moire\_f1.jpg}} $\omega1$ =  0.10 (cycle/pixel) 
+\end{paragraph}
+
+\begin{paragraph}{\emph{1024\_moire\_f2.jpg}} $\omega2$ =  0.010 (cycle/pixel) 
+\end{paragraph}
+
+\subsection{Quelle est l'interprétation des deux images (f1 et f2) sous-échantillonnées d'un facteur 8 sur le plan de Fourier?}
+
+En sous échantillonnant les deux images f1 et f2 on observe le phénomène de moire pour l'image f1 sous-échantillonnées mais pas pour l'image f2. Sachant que les fréquences pour ces deux images sont différentes on en déduit donc qu'il y a un seuil de fréquence pour lequel le phénomène se manifeste.
+
+\subsection{Quelle est la fréquence max d'un motif cyclique dans l'image d'origine, qui empêche le phénomène de repliement dans l'image sous-échantillonnée d'un facteur 4?}
+
+$\omega_{max}$  = 0.5
+
+\subsection{Parmi les deux fréquences $\omega1$ et $\omega2$, quelle est celle qui évite le phénomène de repliement de spectre au sein de l'image sous-échantillonnée?}
+
+Celle qui évite le repliement de spectre est $\omega2$ car si on sous-échantillonne l'image f2 par un facteur 8 
+on obtient une valeur de fréquence de 0.08 (cycle/pixel) < 0.5 (cycle/pixel). Alors que pour f1 on obtient 0.8 (cycle/pixel) > 0.5 (cycle/pixel).
+
+\subsection{Que deviennent les fréquences $\omega1$ et $\omega2$ dans l'image sous-échantillonnée?}
+
+Lors du sous-échantillonnage on suppose que l'image est reproduite a l'infini dans toutes les directions. Lorsque la fréquence dépasse un certain seuil (ici 0.5) la courbe de la FFT de cette image sous-échantillonnée dépasse le cadre visible et va donc se retrouver sur les images adjacentes. Le phénomène de repliement de spectre est donc l'apparition des courbes (représentant les hautes fréquences) voisines sur la FFT de l'image sous-échantillonnée (\emph{cf.} Fig.\ref{fig:FTT_phenom_moire_sous_ech_fact_4_dessin}). 
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/FTT_phenom_moire_sous_ech_fact_4_dessin.png}
+\end{center}
+	\caption{FTT de l'mage du phénomène de Moire sous-échantillonné d'un facteur 4 dans les deux directions}
+	\label{fig:FTT_phenom_moire_sous_ech_fact_4_dessin}
+\end{figure}
+
+
+\subsection{Filtre passe-bas}
+
+Après avoir recherché la bonne valeur pour le rayon du filtre on trouve 110, comme cela on inclue les hautes fréquences afin de réduire le phénomène de moiré. Après addition de l'inverse de la FFT du filtre et de l'image f2 on obtient l'image suivante où l'on voit bien que le phénomène de moiré à été atténué.
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/img_final.png}
+\end{center}
+	\caption{Image sous échantillonné après utilisation d'un filtre passe-bas}
+	\label{fig:img_final}
+\end{figure}
+
+
+\end{document}

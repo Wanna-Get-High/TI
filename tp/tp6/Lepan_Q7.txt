@@ -21,12 +21,14 @@ macro "direction FFT" {
 	image_name = "";
 
 	// For all of the images
+
 	for (k=1; k<19; k++)
 	{
 		// Getting the size_name
 		if (k <= 6 )		{	image_name_size = "128_"; } 
 		else if (k<=12)	{	image_name_size = "256_"; }
 		else  				{	image_name_size = "512_"; }	
+		
 		// Getting the letter_name
 		if (k % 6 == 0) 		{ image_name_letter = "f.jpg"; }
 		else if (k % 6 == 5) 	{ image_name_letter = "e.jpg"; }
@@ -41,6 +43,7 @@ macro "direction FFT" {
 		
 		// rŽcupŽration du ID de l'image
 		image = getImageID();
+
 
 		// application de la FFT
 		run("FFT", "title='FFT de l'image courante'");
