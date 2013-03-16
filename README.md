@@ -1,6 +1,6 @@
 ##TI
 
-Master 1 Semester 2 working directory
+Master 1 Semester 2 working directory.
 
 I use these software 
 >Scilab: http://www.scilab.org/
