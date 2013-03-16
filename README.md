@@ -1,4 +1,7 @@
-TI
-==
+##TI
 
-Master 1 work directory: using Scilab
+Master 1 Semester 2 working directory: 
+>using: 
+>>Scilab
+>
+>>ImageJ
