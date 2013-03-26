@@ -1,0 +1,248 @@
+ \documentclass[a4paper,10pt]{article}
+\input{/Users/WannaGetHigh/workspace/latex/macros.tex}
+
+\title{Détection de contours par approche du premier ordre}
+\author{François \bsc{Lepan}}
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+
+Dans ce rapport nous allons voir comment mettre en oeuvre la détection de contours par approche du premier ordre. Nous verrons l'utilité du calcul de la norme d'un gradient et différents cueillages permettant d'aboutir à la détection de contour.
+
+\section{Seuillage de la norme d'un gradient}
+
+Tout d'abord pour détecter un contour il faut effectuer certains calculs. Le premier est le calcul de la norme d'une image.
+
+Après avoir calculé sa norme nous obtenons des valeurs pour les pixels de la norme. Analysons ces valeurs.
+
+\subsection*{L'image obtenue est de profondeur 32 bits. Comment expliquer sa valeur minimale et sa valeur maximale ?}
+
+La valeur minimale est égale à 0 et sa valeur maximale est égale à 904,896. Ces valeurs s'expliquent par le calcul de la norme. Sachant que les valeurs pour l'image convolutionY  (\emph{cf.}~Fig.~\ref{convolution} à droite) varient entre  -804 et 895 et pour l'image convolutionX (\emph{cf.}~Fig.~\ref{convolution} à gauche)  elles varient entre -844 et 788.
+
+Donc après calcul ($\sqrt{p_x^2~+~p_y^2}$) on peut obtenir des valeurs qui oscillent entre 0 et 904,896 sur l'image de la norme (\emph{cf.}~Fig.~\ref{norme}).
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=5cm]{images/convolution_Y.png}
+	\includegraphics[width=5cm]{images/convolution_X.png}
+\end{center}
+	\caption{Résultat de la convolution en X à gauche et Y à droite}
+	\label{convolution}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=5cm]{images/norme.png}
+\end{center}
+	\caption{Résultat de la norme du gradient}
+	\label{norme}
+\end{figure}
+
+Maintenant que nous avons obtenu l'image de la norme, on se rend bien compte qu'il y a beaucoup de pixels "bruit".
+
+Un procédé pour les éliminer est le seuillage des valeurs de l'image de la norme du gradient.
+
+\newpage
+
+\subsection*{Seuillage de la norme du gradient précédemment calculée}
+
+Une première approche est de calculer un seuil global sur l'image.
+
+\subsubsection*{Est-il possible de trouver ainsi un seuil global pour l'image qui mette en évidence les pixels contours de manière satisfaisante ?}
+
+Non ce n'est pas possible car si on met le seuil trop haut afin d'éliminer des pixels "bruit" on élimine par la même occasion des pixels de contour (\emph{cf.}~Fig.~\ref{seuillage} à droite). Mais si le seuil est trop bas on garde trop de pixel "bruit" (\emph{cf.}~Fig.~\ref{seuillage} à gauche).
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/seuil_bas.png}
+	\includegraphics[width=5cm]{images/seuil_haut.png}
+\end{center}
+	\caption{Résultat d'un seuillage sur la norme du gradient. À gauche un seuillage bas et à droite un seuillage haut}
+	\label{seuillage}
+\end{figure}
+
+On voit bien que cette approche n'est pas satisfaisante il faudrait avoir plusieurs seuils en fonction de la position du pixel. Il faut pour cela calculer des maxima locaux à l'image de la norme du gradient.
+
+\section{Détection des maxima locaux de la norme d'un gradient}
+
+Afin de calculer les maxima locaux il faut pour cela s'aider de la direction du gradient de Sobel et en fonction de la direction prendre le pixel qui a la valeur maximale (\emph{cf.}~Fig.\ref{shema_orientation}).
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=12cm]{images/orientation_calcule_max_local.pdf}
+\end{center}
+	\caption{Schéma de l'utilisation du gradient de Sobel pour le calcule des maxima locaux}
+	\label{shema_orientation}
+\end{figure}
+
+\newpage
+
+\subsection*{Examinons l'image représentant la direction du gradient de Sobel et interprétons la}
+
+Prenons un pixel du bord droit du phare sur l'image orientation (\emph{cf.}~Fig.~\ref{orientation}). Sur l'image de base le phare est plus clair que le fond. Donc après avoir calculé l'orientation on est censé obtenir une valeur proche de $180^o$ (l'orientation doit aller dans le sens de la valeur de pixel plus élevé). Après observation des valeurs grâce à l'outil \emph{Pixel Inspector}  on observe des valeurs de pixels comprises entre 170 et 180 degré ce qui est normal.
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/orientation.png}
+\end{center}
+	\caption{Image orientation obtenue grâce aux images de la Fig.~\ref{convolution} et au calcul suivant: $atan2(p_y,p_x)*180/\pi$ avec $p_x$ le pixel de la convolution en X et $p_y$ le pixel de la convolution en Y}
+	\label{orientation}
+\end{figure}
+
+
+\subsection*{Image obtenue après calcul des maxima locaux}
+
+On obtient l'image suivante ~Fig.~\ref{norme_max_locaux} (à droite). En la comparant à l'image de la norme du gradient (Fig.~\ref{norme_max_locaux} à gauche) on voit bien que la plupart des pixels "bruit" ont été supprimé. Mais il reste encore des pixels "bruit", afin de les supprimer il faut encore effectuer un seuillage particulier le seuillage des maxima locaux par hystérésis.
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/norme.png}
+	\includegraphics[width=5cm]{images/norme_maxima_locaux.png}
+\end{center}
+	\caption{de gauche à droite: résultat du calcul de la norme du gradient et résultat du calcul des maxima locaux de la norme du gradient}
+	\label{norme_max_locaux}
+\end{figure}
+
+\section{Seuillage des maxima locaux par hystérésis}
+
+Dans cette partie nous allons expliquer l'algorithme du seuillage des maxima locaux par hystérésis grâce à l'algorithme suivant:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+public ByteProcessor \codeRed{hystIter}(ImageProcessor imNormeG, int seuilBas, int seuilHaut) \{
+        
+	\codeBlue{// On récupère la taille de l'image}
+	int width = imNormeG.getWidth();
+	int height = imNormeG.getHeight();
+
+	\codeBlue{// On va créer une liste de pixels contours pour lesquels la valeur}
+	\codeBlue{// est supérieure au seuil haut.}
+	\codeBlue{// cette liste servira à savoir si il y a encore des pixels voisins}
+	\codeBlue{// aux pixels contours compris entre les deux seuils}
+	ByteProcessor maxLoc = new ByteProcessor(width,height);
+	List<int[]> highpixels = new ArrayList<int[]>();
+
+	for (int y=0; y<height; y++) \{
+		for (int x=0; x<width; x++) \{
+
+			\codeBlue{// On récupère le pixel courant de l'image issue}
+			\codeBlue{// du calcul des maxima locaux}
+			int g = imNormeG.getPixel(x, y)&0xFF;
+                
+			\codeBlue{// Si le pixel est inférieur au seuil bas on laisse le pixel à 0.}
+			\codeBlue{// Cela permet d'éliminer les pixels non contour (non candidat).}
+			if (g<seuilBas) continue;
+
+			\codeBlue{// Si le pixel est supérieur au seuil haut on}
+			\codeBlue{// le garde comme pixel contour.}
+			if (g>seuilHaut) \{
+				maxLoc.set(x,y,255);
+				highpixels.add(new int[]\{x,y\});
+				continue;
+			\}
+
+			\codeBlue{// On met le pixel dont la valeur est comprise entre le seuil bas}
+			\codeBlue{// et le seuil haut dans la nouvelle image. Ce seront les pixels}
+			\codeBlue{candidats.}
+			maxLoc.set(x,y,128);
+		\}
+	\}
+
+
+	\codeBlue{// on sauvegarde les pas pour accéder aux pixels voisins}
+	int[] dx8 = new int[] \{-1, 0, 1,-1, 1,-1, 0, 1\};
+	int[] dy8 = new int[] \{-1,-1,-1, 0, 0, 1, 1, 1\};
+        
+	\codeBlue{// La nouvelle liste de pixels contours}
+	List<int[]> newhighpixels = new ArrayList<int[]>();
+
+	\codeBlue{// tant qu'il reste des candidats potentiels}
+	while(!highpixels.isEmpty()) \{
+        	
+		\codeBlue{// on vide la liste de nouveaux pixels contours}
+		newhighpixels.clear();
+            
+		\codeBlue{// Pour chaque pixel coutour}
+		for(int[] pixel : highpixels) \{
+			int x=pixel[0], y=pixel[1];
+                
+			\codeBlue{// On cherche à savoir lesquels de ses voisins}
+			\codeBlue{// sont des pixels candidats.}
+			\codeBlue{// Si ce pixel est un pixel candidat alors on l'ajoute}
+			\codeBlue{// dans les nouveaux pixels contours.}
+			for(int k=0;k<8;k++) \{
+				\codeBlue{// On récupère le voisin en fonction du pas}
+				int xk=x+dx8[k], yk=y+dy8[k];
+                    
+				\codeBlue{// on évite les effets de bord}
+				if (xk<0 || xk>=width) continue;
+				if (yk<0 || yk>=height) continue;
+                    
+				\codeBlue{// si le pixel est un candidat on le sauvegarde en tant que}
+				\codeBlue{// nouveau pixel contour et on met la valeur à l'indice de ce}
+				\codeBlue{// pixel à 255}
+				if (maxLoc.get(xk, yk)==128) \{
+					maxLoc.set(xk, yk, 255);
+				newhighpixels.add(new int[]\{xk, yk\});
+				\}
+			\}
+		\}
+
+		\codeBlue{// On met dans la nouvelle liste de pixels contours les nouveaux pixels}
+		\codeBlue{// précédemment calculé}
+		List<int[]> swap = highpixels; 
+		highpixels = newhighpixels; 
+		newhighpixels = swap;
+	\}
+
+	\codeBlue{// On élimine les pixels isolés}
+	for (int y=0; y<height; y++) \{
+		for (int x=0; x<width; x++) \{
+			if (maxLoc.get(x, y)!=255) maxLoc.set(x,y,0);
+		\}
+	\}
+        
+	\codeBlue{// On retourne l'image}
+	return maxLoc;
+\}
+\end{Verbatim}
+
+Lorsque cet algorithme est appelé sur l'image résultant du calcul des maxima locaux (\emph{cf.} Fig.~\ref{norme_max_locaux} à droite) on obtient la Fig.~\ref{seuillage_hysteresis} 
+
+\begin{figure}[ht]
+\begin{center}
+	\includegraphics[width=5cm]{images/seuillage_hysteresis.png}
+\end{center}
+	\caption{Image résultant du seuillage des maxima locaux par hystérésis avec pour valeur de seuil min 30 et seuil max 100}
+	\label{seuillage_hysteresis}
+\end{figure}
+
+\newpage
+
+\section*{Conclusion}
+
+On se rend bien compte que la détection de contour n'est pas une chose simple. Il faut calculer la norme de gradient de l'image pour ensuite en tirer une image résultant du calcul des maxima locaux et enfin appliquer un seuillage par hystérésis. Après tous ces calculs on obtient une image de contour satisfaisante mais malgré tout il reste des contours indésirables. Il faudra peut être appliquer de nouveaux calculs sur l'image afin d'enlever tout contour indésirable.
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
