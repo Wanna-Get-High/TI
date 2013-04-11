@@ -1,0 +1,4 @@
+open("../tp11/lighthouse.png");
+run("compute cfa", "début=G-R-G");
+run("demat ha");
+run("Stack to RGB");

@@ -1,3 +1,4 @@
+
 // Importation des paquets nécessaires. Le plugin n'est pas lui-même un paquet (pas de mot-clé package)
 import ij.*; // pour classes ImagePlus et IJ
 import ij.plugin.filter.PlugInFilter; // pour interface PlugInFilter

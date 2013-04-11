@@ -1,0 +1,9 @@
+open("../tp11/lighthouse.png");
+run("compute cfa", "dŽbut=G-R-G");
+run("sample cfa");
+run("Convolve...", "text1=[0.25 0.5 0.25\n0.5 1 0.5\n0.25 0.5 0.25\n]");
+run("Next Slice [>]");
+run("Convolve...", "text1=[0 0.25 0\n0.25 1 0.25\n0 0.25 0\n]");
+run("Next Slice [>]");
+run("Convolve...", "text1=[0.25 0.5 0.25\n0.5 1 0.5\n0.25 0.5 0.25\n]");
+run("Stack to RGB");
